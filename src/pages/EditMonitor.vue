@@ -32,6 +32,9 @@
                                     <option value="steam">
                                         Steam Game Server
                                     </option>
+                                    <option value="substrate-node">
+                                        Substrate Node
+                                    </option>
                                 </select>
                             </div>
 

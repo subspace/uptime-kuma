@@ -1,51 +1,420 @@
-<template>
-    <span class="badge rounded-pill" :class=" 'bg-' + color ">{{ text }}</span>
-</template>
+@import "vars.scss";
+@import "multiselect.scss";
+@import "node_modules/bootstrap/scss/bootstrap";
 
-<script>
-export default {
-    props: {
-        status: Number,
-    },
+#app {
+    font-family: BlinkMacSystemFont, segoe ui, Roboto, helvetica neue, Arial, noto sans, sans-serif, apple color emoji, segoe ui emoji, segoe ui symbol, noto color emoji;
+}
 
-    computed: {
-        color() {
-            if (this.status === 0) {
-                return "danger";
-            }
+h1 {
+    font-size: 32px;
+}
 
-            if (this.status === 1) {
-                return "primary";
-            }
+h2 {
+    font-size: 26px;
+}
 
-            if (this.status === 2) {
-                return "warning";
-            }
+textarea.form-control {
+    border-radius: 19px;
+}
 
-            return "secondary";
-        },
+::-webkit-scrollbar {
+    width: 10px;
+}
 
-        text() {
-            if (this.status === 0) {
-                return this.$t("Down");
-            }
+::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 20px;
+}
 
-            if (this.status === 1) {
-                return this.$t("Up");
-            }
+.modal {
+    backdrop-filter: blur(3px);
+}
 
-            if (this.status === 2) {
-                return this.$t("Pending");
-            }
+.modal-content {
+    border-radius: 1rem;
+    box-shadow: 0 15px 70px rgba(0, 0, 0, 0.1);
 
-            return this.$t("Unknown");
-        },
-    },
-};
-</script>
-
-<style scoped>
-    span {
-        min-width: 64px;
+    .dark & {
+        box-shadow: 0 15px 70px rgb(0 0 0);
+        background-color: $dark-bg;
     }
-</style>
+}
+
+.VuePagination__count {
+    font-size: 13px;
+    text-align: center;
+}
+
+.shadow-box {
+    //overflow: hidden;   // Forget why add this, but multiple select hide by this
+    box-shadow: 0 15px 70px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    border-radius: 10px;
+
+    &.big-padding {
+        padding: 20px;
+    }
+}
+
+.btn {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.btn-primary {
+    color: #fafafa;
+
+    &:hover, &:active, &:focus, &.active {
+        color: #fafafa;
+        background-color: $highlight;
+        border-color: $highlight;
+    }
+
+    .dark & {
+        color: $dark-font-color2;
+    }
+}
+
+.btn-warning {
+    color: #fafafa;
+
+    &:hover, &:active, &:focus, &.active {
+        color: #fafafa;
+    }
+}
+
+.btn-info {
+    color: #fafafa;
+
+    &:hover, &:active, &:focus, &.active {
+        color: #fafafa;
+    }
+}
+
+@media (max-width: 550px) {
+    .table-shadow-box {
+        padding: 10px !important;
+
+        thead {
+            display: none;
+        }
+
+        tbody {
+            .shadow-box {
+                background-color: #fafafa;
+            }
+        }
+
+        tr {
+            margin-top: 0 !important;
+            padding: 4px 10px !important;
+            display: block;
+            margin-bottom: 6px;
+
+            td:first-child {
+                font-weight: bold;
+            }
+
+            td:nth-child(-n+3) {
+                text-align: center;
+            }
+
+            td:last-child {
+                text-align: left;
+            }
+
+            td {
+                border-bottom: 1px solid $dark-font-color;
+                display: block;
+                padding: 4px;
+
+                .badge {
+                    margin: auto;
+                    display: block;
+                    width: 30%;
+                }
+            }
+        }
+    }
+}
+
+// Dark Theme override here
+.dark {
+    background-color: #090c10;
+    color: $dark-font-color;
+
+    &::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb {
+        background: $dark-border-color;
+    }
+
+    .shadow-box {
+        &:not(.alert) {
+            background-color: $dark-bg;
+        }
+    }
+
+    .form-check-input {
+        background-color: $dark-bg2;
+    }
+
+    .form-switch .form-check-input {
+        background-color: #232f3b;
+    }
+
+    a,
+    .table,
+    .nav-link {
+        color: $dark-font-color;
+
+        &.btn-info {
+            color: #fafafa;
+        }
+    }
+
+    .form-control,
+    .form-control:focus,
+    .form-select,
+    .form-select:focus {
+        color: $dark-font-color;
+        background-color: $dark-bg2;
+    }
+
+    .form-control, .form-select {
+        border-color: $dark-border-color;
+    }
+
+    .form-control:disabled, .form-control[readonly] {
+        background-color: #232f3b;
+        opacity: 1;
+    }
+
+    .table-hover > tbody > tr:hover {
+        --bs-table-accent-bg: #070a10;
+        color: $dark-font-color;
+    }
+
+    .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+        color: $dark-font-color2;
+    }
+
+    .bg-primary {
+        color: $dark-font-color2;
+    }
+
+    .btn-secondary {
+        color: #fafafa;
+    }
+
+    .btn-warning {
+        color: $dark-font-color2;
+
+        &:hover, &:active, &:focus, &.active {
+            color: $dark-font-color2;
+        }
+    }
+
+    .btn-close {
+        box-shadow: none;
+        filter: invert(1);
+
+        &:hover {
+            opacity: 0.6;
+        }
+    }
+
+    .modal-header {
+        border-color: $dark-bg;
+    }
+
+    .modal-footer {
+        border-color: $dark-bg;
+    }
+
+    // Pagination
+    .page-item.disabled .page-link {
+        background-color: $dark-bg;
+        border-color: $dark-border-color;
+    }
+
+    .page-link {
+        background-color: $dark-bg;
+        border-color: $dark-border-color;
+        color: $dark-font-color;
+    }
+
+    .monitor-list {
+        .item {
+            &:hover {
+                background-color: $dark-bg2;
+            }
+
+            &.active {
+                background-color: $dark-bg2;
+            }
+        }
+    }
+
+    @media (max-width: 550px) {
+        .table-shadow-box {
+            tbody {
+                .shadow-box {
+                    background-color: $dark-bg2;
+
+                    td {
+                        border-bottom: 1px solid $dark-border-color;
+                    }
+                }
+            }
+        }
+    }
+
+    .alert {
+        &.bg-info,
+        &.bg-warning,
+        &.bg-danger,
+        &.bg-light {
+            color: $dark-font-color2;
+        }
+    }
+
+}
+
+/*
+ * Transitions
+ */
+
+// page-change
+.slide-fade-enter-active {
+    transition: all 0.2s $easing-in;
+}
+
+.slide-fade-leave-active {
+    transition: all 0.2s $easing-in;
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+    transform: translateY(50px);
+    opacity: 0;
+}
+
+.slide-fade-right-enter-active {
+    transition: all 0.2s $easing-in;
+}
+
+.slide-fade-right-leave-active {
+    transition: all 0.2s $easing-in;
+}
+
+.slide-fade-right-enter-from,
+.slide-fade-right-leave-to {
+    transform: translateX(50px);
+    opacity: 0;
+}
+
+.monitor-list {
+    &.scrollbar {
+        min-height: calc(100vh - 240px);
+        max-height: calc(100vh - 30px);
+        overflow-y: auto;
+        position: sticky;
+        top: 10px;
+    }
+
+    .item {
+        display: block;
+        text-decoration: none;
+        padding: 13px 15px 10px 15px;
+        border-radius: 10px;
+        transition: all ease-in-out 0.15s;
+
+        &.disabled {
+            opacity: 0.3;
+        }
+
+        .info {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        &:hover {
+            background-color: $highlight-white;
+        }
+
+        &.active {
+            background-color: #cdf8f4;
+        }
+    }
+}
+
+.alert-success {
+    color: #122f21;
+    background-color: $primary;
+    border-color: $primary;
+}
+
+.alert-info {
+    color: #055160;
+    background-color: #cff4fc;
+    border-color: #cff4fc;
+}
+
+.alert-danger {
+    color: #842029;
+    background-color: #f8d7da;
+    border-color: #f8d7da;
+}
+
+.btn-success {
+    color: #fff;
+    background-color: #4caf50;
+    border-color: #4caf50;
+}
+
+[contenteditable=true] {
+    transition: all $easing-in 0.2s;
+    background-color: rgba(239, 239, 239, 0.7);
+    border-radius: 8px;
+
+    &:focus {
+        outline: 0 solid #eee;
+        background-color: rgba(245, 245, 245, 0.9);
+    }
+
+    &:hover {
+        background-color: rgba(239, 239, 239, 0.8);
+    }
+
+    .dark & {
+        background-color: rgba(239, 239, 239, 0.2);
+    }
+
+    /*
+    &::after {
+        margin-left: 5px;
+        content: "🖊️";
+        font-size: 13px;
+        color: #eee;
+    }
+    */
+
+}
+
+.action {
+    transition: all $easing-in 0.2s;
+
+    &:hover {
+        cursor: pointer;
+        transform: scale(1.2);
+    }
+}
+
+.vue-image-crop-upload .vicp-wrap {
+    border-radius: 10px !important;
+}
+
+// Localization
+
+@import "localization.scss";
