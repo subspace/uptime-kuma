@@ -8,6 +8,7 @@ const { Resolver } = require("dns");
 const child_process = require("child_process");
 const iconv = require("iconv-lite");
 const chardet = require("chardet");
+const { ApiPromise, WsProvider } = require("@polkadot/api");
 
 // From ping-lite
 exports.WIN = /^win/.test(process.platform);
@@ -331,4 +332,116 @@ exports.convertToUTF8 = (body) => {
     //debug("Guess Encoding: " + guessEncoding);
     const str = iconv.decode(body, guessEncoding);
     return str.toString();
+};
+
+//Substrate API get block header number.
+exports.getLastHead = async () => {
+    try {
+        const myWsProvider = new WsProvider("wss://test-rpc.subspace.network");
+        const api = await ApiPromise.create({
+            provider: myWsProvider,
+            types: {
+                subspace_getBlockByNumber: {
+                    block_number: "u32"
+                },
+                subspace_getFarmerMetadata: "FutureResult<FarmerMetadata>",
+                subspace_proposeProofOfReplication: {
+                    proposed_proof_of_space_result: "ProposedProofOfReplicationResult"
+                },
+                subspace_subscribeSlotInfo: "FutureResult<SlotInfo>",
+                subspace_unsubscribeSlotInfo: "FutureResult<()>",
+                subspace_subscribeArchivedSegment: "FutureResult<ArchivedSegment>",
+                subspace_unsubscribeArchivedSegment: "FutureResult<()>",
+                RpcSolution: {
+                    public_key: "[u8; 32]",
+                    nonce: "u64",
+                    encoding: "Vec<u8>",
+                    signature: "Vec<u8>",
+                    tag: "[u8; 8]"
+                },
+                ProposedProofOfSpaceResult: {
+                    slot_number: "Slot",
+                    solution: "Option<RpcSolution>",
+                    secret_key: "Vec<u8>"
+                },
+                RpcNewSlotInfo: {
+                    slot_number: "Slot",
+                    challenge: "[u8; 8]",
+                    salt: "[u8; 8]",
+                    next_salt: "Option<[u8; 8]>",
+                    solution_range: "u64"
+                },
+                PoCRandomness: "[u8; 32]",
+                FarmerSignature: "Signature",
+                FarmerId: "AccountId",
+                PoCBlockWeight: "u32",
+                ConsensusLog: {
+                    _enum: {
+                        Phantom: "Null",
+                        NextEpochData: "PoCNextEpochDescriptor",
+                        NextConfigData: "PoCNextConfigDescriptor",
+                        SolutionRangeData: "SolutionRangeDescriptor",
+                        SaltData: "SaltDescriptor",
+                        NextSolutionRangeData: "NextSolutionRangeDescriptor",
+                        NextSaltData: "NextSaltDescriptor"
+                    }
+                },
+                PoCNextEpochDescriptor: {
+                    randomness: "PoCRandomness"
+                },
+                PoCNextConfigDescriptor: {
+                    _enum: {
+                        V0: "Null",
+                        V1: "PoCNextConfigDescriptorV1"
+                    }
+                },
+                PoCNextConfigDescriptorV1: {
+                    c: "(u64, u64)"
+                },
+                SolutionRangeDescriptor: {
+                    solution_range: "u64"
+                },
+                SaltDescriptor: {
+                    salt: "u64"
+                },
+                NextSolutionRangeDescriptor: {
+                    solution_range: "u64"
+                },
+                NextSaltDescriptor: {
+                    salt: "u64"
+                },
+                PoCEpochConfiguration: {
+                    c: "(u64, u64)"
+                },
+                Solution: {
+                    public_key: "FarmerId",
+                    nonce: "u64",
+                    encoding: "Vec<u8>",
+                    signature: "Vec<u8>",
+                    tag: "[u8; 8]"
+                },
+                RawPoCPreDigest: {
+                    slot: "Slot",
+                    solution: "Solution"
+                },
+                PoCEquivocationProof: {
+                    offender: "FarmerId",
+                    slot: "Slot",
+                    firstHeader: "Header",
+                    secondHeader: "Header"
+                },
+                EquivocationProof: "PoCEquivocationProof",
+                PoCEquivocationOffence: {
+                    slot: "Slot",
+                    offender: "FullIdentification"
+                }
+            }
+        });
+        await api.isReady;
+        const head = await api.rpc.chain.getBlock();
+        api.disconnect();
+        return head.block.header.number;
+    } catch (error) {
+        return error;
+    }
 };

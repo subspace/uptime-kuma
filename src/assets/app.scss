@@ -63,10 +63,10 @@ textarea.form-control {
 }
 
 .btn-primary {
-    color: white;
+    color: #fafafa;
 
     &:hover, &:active, &:focus, &.active {
-        color: white;
+        color: #fafafa;
         background-color: $highlight;
         border-color: $highlight;
     }
@@ -77,18 +77,18 @@ textarea.form-control {
 }
 
 .btn-warning {
-    color: white;
+    color: #fafafa;
 
     &:hover, &:active, &:focus, &.active {
-        color: white;
+        color: #fafafa;
     }
 }
 
 .btn-info {
-    color: white;
+    color: #fafafa;
 
     &:hover, &:active, &:focus, &.active {
-        color: white;
+        color: #fafafa;
     }
 }
 
@@ -102,7 +102,7 @@ textarea.form-control {
 
         tbody {
             .shadow-box {
-                background-color: white;
+                background-color: #fafafa;
             }
         }
 
@@ -168,7 +168,7 @@ textarea.form-control {
         color: $dark-font-color;
 
         &.btn-info {
-            color: white;
+            color: #fafafa;
         }
     }
 
@@ -203,7 +203,7 @@ textarea.form-control {
     }
 
     .btn-secondary {
-        color: white;
+        color: #fafafa;
     }
 
     .btn-warning {
