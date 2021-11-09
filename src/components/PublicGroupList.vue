@@ -33,17 +33,22 @@
                         <template #item="monitor">
                             <div class="item">
                                 <div class="row">
-                                    <div class="col-9 col-md-8 small-padding">
-                                        <div class="info">
-                                            <font-awesome-icon v-if="editMode" icon="arrows-alt-v" class="action drag me-3" />
-                                            <font-awesome-icon v-if="editMode" icon="times" class="action remove me-3" @click="removeMonitor(group.index, monitor.index)" />
+                                    <button type="button" class="collapse">
+                                        <div class="col-9 col-md-8 small-padding">
+                                            <div class="info">
+                                                <font-awesome-icon v-if="editMode" icon="arrows-alt-v" class="action drag me-3" />
+                                                <font-awesome-icon v-if="editMode" icon="times" class="action remove me-3" @click="removeMonitor(group.index, monitor.index)" />
 
-                                            <Uptime :monitor="monitor.element" type="24" :pill="true" />
-                                            {{ monitor.element.name }}
+                                                <Uptime :monitor="monitor.element" type="24" :pill="true" />
+                                                {{ monitor.element.name }}
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div :key="$root.userHeartbeatBar" class="col-3 col-md-4">
-                                        <HeartbeatBar size="small" :monitor-id="monitor.element.id" />
+                                        <div :key="$root.userHeartbeatBar" class="col-3 col-md-4">
+                                            <HeartbeatBar size="small" :monitor-id="monitor.element.id" />
+                                        </div>
+                                    </button>
+                                    <div id="monitorDetails" class="collapse">
+                                        <h1>A BUNCH OF DETAILS...</h1>
                                     </div>
                                 </div>
                             </div>
@@ -141,4 +146,26 @@ export default {
     }
 }
 
+.active, .collapse:hover {
+    background: $primary;
+    color: $white;
+}
+
+.monitorDetails {
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    color: $white;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
 </style>
