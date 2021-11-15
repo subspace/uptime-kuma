@@ -113,6 +113,14 @@ export default {
 <style lang="scss" scoped>
 @import "../assets/vars";
 
+.summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
 .no-monitor-msg {
     position: absolute;
     width: 100%;
