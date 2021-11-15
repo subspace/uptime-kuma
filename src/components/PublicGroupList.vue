@@ -33,23 +33,64 @@
                         <template #item="monitor">
                             <div class="item">
                                 <div class="row">
-                                    <button type="button" class="collapse">
-                                        <div class="col-9 col-md-8 small-padding">
-                                            <div class="info">
-                                                <font-awesome-icon v-if="editMode" icon="arrows-alt-v" class="action drag me-3" />
-                                                <font-awesome-icon v-if="editMode" icon="times" class="action remove me-3" @click="removeMonitor(group.index, monitor.index)" />
+                                    <details>
+                                        <summary class="summary">
+                                            <div class="col-9 col-md-8 small-padding">
+                                                <div class="info">
+                                                    <font-awesome-icon v-if="editMode" icon="arrows-alt-v" class="action drag me-3" />
+                                                    <font-awesome-icon v-if="editMode" icon="times" class="action remove me-3" @click="removeMonitor(group.index, monitor.index)" />
 
-                                                <Uptime :monitor="monitor.element" type="24" :pill="true" />
-                                                {{ monitor.element.name }}
+                                                    <Uptime :monitor="monitor.element" type="24" :pill="true" />
+                                                    {{ monitor.element.name }}
+                                                </div>
+                                            </div>
+                                            <div :key="$root.userHeartbeatBar" class="col-3 col-md-4">
+                                                <HeartbeatBar size="small" :monitor-id="monitor.element.id" />
+                                            </div>
+                                        </summary>
+                                        <!-- Monitor Details -->
+                                        <!-- Detail Blocks -->
+                                        <div class="shadow-box big-padding test-center stats">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <h4>Ping</h4>
+                                                    <p>Current</p>
+                                                    <span class="num">
+                                                        <CountUp :value="monitor.element" />
+                                                    </span>
+                                                </div>
+                                                <div class="col">
+                                                    <h4>Block</h4>
+                                                    <p>Current</p>
+                                                    <span class="num">
+                                                        <p>420</p>
+                                                    </span>
+                                                </div>
+                                                <div class="col">
+                                                    <h4>Block</h4>
+                                                    <p>Current</p>
+                                                    <span class="num">
+                                                        <p>420</p>
+                                                    </span>
+                                                </div>
+                                                <div class="col">
+                                                    <h4>Block</h4>
+                                                    <p>Current</p>
+                                                    <span class="num">
+                                                        <p>420</p>
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div :key="$root.userHeartbeatBar" class="col-3 col-md-4">
-                                            <HeartbeatBar size="small" :monitor-id="monitor.element.id" />
+                                        <!-- Ping Chart -->
+                                        <div class="shadow-box big-padding text-center ping-chart-wrapper">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <PingChart :monitor-id="monitor.element.id" />
+                                                </div>
+                                            </div>
                                         </div>
-                                    </button>
-                                    <div id="monitorDetails" class="collapse">
-                                        <h1>A BUNCH OF DETAILS...</h1>
-                                    </div>
+                                    </details>
                                 </div>
                             </div>
                         </template>
@@ -61,15 +102,20 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from "vue";
+const PingChart = defineAsyncComponent(() => import("../components/PingChart.vue"));
 import Draggable from "vuedraggable";
 import HeartbeatBar from "./HeartbeatBar.vue";
+import CountUp from "../components/CountUp.vue";
 import Uptime from "./Uptime.vue";
 
 export default {
     components: {
         Draggable,
         HeartbeatBar,
+        CountUp,
         Uptime,
+        PingChart,
     },
     props: {
         editMode: {
@@ -85,7 +131,24 @@ export default {
     computed: {
         showGroupDrag() {
             return (this.$root.publicGroupList.length >= 2);
-        }
+        },
+        lastHeartBeat() {
+            if (this.monitor.id in this.$root.publicLastHeartbeatList && this.$root.publicLastHeartbeatList[this.monitor.id]) {
+                return this.$root.publicLastHeartbeatList[this.monitor.id];
+            }
+
+            return {
+                status: -1,
+            };
+        },
+
+        ping() {
+            if (this.lastHeartBeat.ping || this.lastHeartBeat.ping === 0) {
+                return this.lastHeartBeat.ping;
+            }
+
+            return this.$t("notAvailableShort");
+        },
     },
     created() {
 
@@ -104,6 +167,14 @@ export default {
 
 <style lang="scss" scoped>
 @import "../assets/vars";
+
+.summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
 
 .no-monitor-msg {
     position: absolute;
