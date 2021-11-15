@@ -33,18 +33,31 @@
                         <template #item="monitor">
                             <div class="item">
                                 <div class="row">
-                                    <div class="col-9 col-md-8 small-padding">
-                                        <div class="info">
-                                            <font-awesome-icon v-if="editMode" icon="arrows-alt-v" class="action drag me-3" />
-                                            <font-awesome-icon v-if="editMode" icon="times" class="action remove me-3" @click="removeMonitor(group.index, monitor.index)" />
+                                    <details>
+                                        <summary class="summary">
+                                            <div class="col-9 col-md-8 small-padding">
+                                                <div class="info">
+                                                    <font-awesome-icon v-if="editMode" icon="arrows-alt-v" class="action drag me-3" />
+                                                    <font-awesome-icon v-if="editMode" icon="times" class="action remove me-3" @click="removeMonitor(group.index, monitor.index)" />
 
-                                            <Uptime :monitor="monitor.element" type="24" :pill="true" />
-                                            {{ monitor.element.name }}
+                                                    <Uptime :monitor="monitor.element" type="24" :pill="true" />
+                                                    {{ monitor.element.name }}
+                                                </div>
+                                            </div>
+                                            <div :key="$root.userHeartbeatBar" class="col-3 col-md-4">
+                                                <HeartbeatBar size="small" :monitor-id="monitor.element.id" />
+                                            </div>
+                                        </summary>
+                                        <!-- Monitor Details -->
+                                        <!-- Ping Chart -->
+                                        <div class="shadow-box big-padding text-center ping-chart-wrapper">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <PingChart :monitor-id="monitor.element.id" />
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div :key="$root.userHeartbeatBar" class="col-3 col-md-4">
-                                        <HeartbeatBar size="small" :monitor-id="monitor.element.id" />
-                                    </div>
+                                    </details>
                                 </div>
                             </div>
                         </template>
