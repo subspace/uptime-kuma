@@ -49,39 +49,6 @@
                                             </div>
                                         </summary>
                                         <!-- Monitor Details -->
-                                        <!-- Detail Blocks -->
-                                        <div class="shadow-box big-padding test-center stats">
-                                            <div class="row">
-                                                <div class="col">
-                                                    <h4>Ping</h4>
-                                                    <p>Current</p>
-                                                    <span class="num">
-                                                        <CountUp :value="monitor.element" />
-                                                    </span>
-                                                </div>
-                                                <div class="col">
-                                                    <h4>Block</h4>
-                                                    <p>Current</p>
-                                                    <span class="num">
-                                                        <p>420</p>
-                                                    </span>
-                                                </div>
-                                                <div class="col">
-                                                    <h4>Block</h4>
-                                                    <p>Current</p>
-                                                    <span class="num">
-                                                        <p>420</p>
-                                                    </span>
-                                                </div>
-                                                <div class="col">
-                                                    <h4>Block</h4>
-                                                    <p>Current</p>
-                                                    <span class="num">
-                                                        <p>420</p>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
                                         <!-- Ping Chart -->
                                         <div class="shadow-box big-padding text-center ping-chart-wrapper">
                                             <div class="row">
