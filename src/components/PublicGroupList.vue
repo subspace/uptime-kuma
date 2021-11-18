@@ -49,6 +49,57 @@
                                             </div>
                                         </summary>
                                         <!-- Monitor Details -->
+                                        <!-- Ping Detail -->
+                                        <div class="col">
+                                            <h4>Ping</h4>
+                                            <p>({{ $t("Current") }})</p>
+                                            <span class="num">
+                                                <a href="#" @click.prevent="showPingChartBox = !showPingChartBox">
+                                                    <CountUp :value="heartbeatList" />
+                                                </a>
+                                            </span>
+                                        </div>
+                                        <!-- AvgPing Detail -->
+                                        <div class="col">
+                                            <h4>Avg. Ping</h4>
+                                            <p>({{ $t("Current") }})</p>
+                                            <span class="num">
+                                                <a href="#" @click.prevent="showPingChartBox = !showPingChartBox">
+                                                    <CountUp :value="lastHeartBeat" />
+                                                </a>
+                                            </span>
+                                        </div>
+                                        <!-- Uptime 24h Detail -->
+                                        <div class="col">
+                                            <h4>Uptime</h4>
+                                            <p>({{ $t("24 Hour") }})</p>
+                                            <span class="num">
+                                                <a href="#" @click.prevent="showPingChartBox = !showPingChartBox">
+                                                    <CountUp :value="lastHeartBeat" />
+                                                </a>
+                                            </span>
+                                        </div>
+                                        <!-- Uptime 30d Detail -->
+                                        <div class="col">
+                                            <h4>Uptime</h4>
+                                            <p>({{ $t("30 Day") }})</p>
+                                            <span class="num">
+                                                <a href="#" @click.prevent="showPingChartBox = !showPingChartBox">
+                                                    <CountUp :value="lastHeartBeat" />
+                                                </a>
+                                            </span>
+                                        </div>
+                                        <!-- Cert Detail -->
+                                        <div class="col">
+                                            <h4>Cert Detail</h4>
+                                            <p>({{ $t("Current") }})</p>
+                                            <span class="num">
+                                                <a href="#" @click.prevent="showPingChartBox = !showPingChartBox">
+                                                    <CountUp :value="lastHeartBeat" />
+                                                </a>
+                                            </span>
+                                        </div>
+
                                         <!-- Ping Chart -->
                                         <div class="shadow-box big-padding text-center ping-chart-wrapper">
                                             <div class="row">
@@ -69,15 +120,20 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
 import Draggable from "vuedraggable";
 import HeartbeatBar from "./HeartbeatBar.vue";
+import CountUp from "./CountUp.vue";
 import Uptime from "./Uptime.vue";
+const PingChart = defineAsyncComponent(() => import("./PingChart.vue"));
 
 export default {
     components: {
         Draggable,
         HeartbeatBar,
         Uptime,
+        CountUp,
+        PingChart,
     },
     props: {
         editMode: {
@@ -87,7 +143,7 @@ export default {
     },
     data() {
         return {
-
+            showPingChartBox: false,
         };
     },
     computed: {
