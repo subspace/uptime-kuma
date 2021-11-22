@@ -140,18 +140,6 @@ export default {
         removeMonitor(groupIndex, index) {
             this.$root.publicGroupList[groupIndex].monitorList.splice(index, 1);
         },
-
-        avgPing(index) {
-
-            let count = 0;
-
-            for (let i = 0; i < this.$root.heartbeatList.length; i++) {
-                count += this.$root.heartbeatList[index].at(i).ping;
-            }
-
-            return count / this.$root.heartbeatList.length;
-
-        },
     }
 };
 </script>
