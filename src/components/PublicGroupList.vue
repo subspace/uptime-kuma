@@ -50,58 +50,36 @@
                                         </summary>
                                         <!-- Monitor Details -->
                                         <!-- Ping Detail -->
-                                        <div class="col">
-                                            <h4>Ping</h4>
-                                            <p>({{ $t("Current") }})</p>
-                                            <span class="num">
-                                                <a href="#" @click.prevent="showPingChartBox = !showPingChartBox">
-                                                    <CountUp :value="heartbeatList" />
-                                                </a>
-                                            </span>
+                                        <div class="shadow-box big-padding text-center stats row">
+                                            <a v-if="monitor.element.type == 'http'" :href="monitor.element.url">{{ monitor.element.url }}</a>
+                                            <div class="col">
+                                                <h4>Ping</h4>
+                                                <p>({{ $t("Current") }})</p>
+                                                <span class="num">
+                                                    <a href="#" @click.prevent="showPingChartBox = !showPingChartBox">
+                                                        <CountUp :value="$root.heartbeatList[monitor.element.id].at(-1).ping" />
+                                                    </a>
+                                                </span>
+                                            </div>
+                                            <!-- Uptime 24h Detail -->
+                                            <div class="col">
+                                                <h4>Uptime</h4>
+                                                <p>({{ $t("24 Hour") }})</p>
+                                                <span class="num">
+                                                    <Uptime :monitor="monitor.element" type="24" />
+                                                </span>
+                                            </div>
+                                            <!-- Uptime 30d Detail -->
+                                            <div class="col">
+                                                <h4>Uptime</h4>
+                                                <p>({{ $t("30 Day") }})</p>
+                                                <span class="num">
+                                                    <Uptime :value="monitor.element" type="720" />
+                                                </span>
+                                            </div>
                                         </div>
-                                        <!-- AvgPing Detail -->
-                                        <div class="col">
-                                            <h4>Avg. Ping</h4>
-                                            <p>({{ $t("Current") }})</p>
-                                            <span class="num">
-                                                <a href="#" @click.prevent="showPingChartBox = !showPingChartBox">
-                                                    <CountUp :value="lastHeartBeat" />
-                                                </a>
-                                            </span>
-                                        </div>
-                                        <!-- Uptime 24h Detail -->
-                                        <div class="col">
-                                            <h4>Uptime</h4>
-                                            <p>({{ $t("24 Hour") }})</p>
-                                            <span class="num">
-                                                <a href="#" @click.prevent="showPingChartBox = !showPingChartBox">
-                                                    <CountUp :value="lastHeartBeat" />
-                                                </a>
-                                            </span>
-                                        </div>
-                                        <!-- Uptime 30d Detail -->
-                                        <div class="col">
-                                            <h4>Uptime</h4>
-                                            <p>({{ $t("30 Day") }})</p>
-                                            <span class="num">
-                                                <a href="#" @click.prevent="showPingChartBox = !showPingChartBox">
-                                                    <CountUp :value="lastHeartBeat" />
-                                                </a>
-                                            </span>
-                                        </div>
-                                        <!-- Cert Detail -->
-                                        <div class="col">
-                                            <h4>Cert Detail</h4>
-                                            <p>({{ $t("Current") }})</p>
-                                            <span class="num">
-                                                <a href="#" @click.prevent="showPingChartBox = !showPingChartBox">
-                                                    <CountUp :value="lastHeartBeat" />
-                                                </a>
-                                            </span>
-                                        </div>
-
                                         <!-- Ping Chart -->
-                                        <div class="shadow-box big-padding text-center ping-chart-wrapper">
+                                        <div v-if="showPingChartBox" class="shadow-box big-padding text-center ping-chart-wrapper">
                                             <div class="row">
                                                 <div class="col">
                                                     <PingChart :monitor-id="monitor.element.id" />
@@ -120,7 +98,7 @@
 </template>
 
 <script>
-import { defineAsyncComponent } from 'vue';
+import { defineAsyncComponent } from "vue";
 import Draggable from "vuedraggable";
 import HeartbeatBar from "./HeartbeatBar.vue";
 import CountUp from "./CountUp.vue";
@@ -143,7 +121,7 @@ export default {
     },
     data() {
         return {
-            showPingChartBox: false,
+            showPingChartBox: true,
         };
     },
     computed: {
@@ -161,6 +139,18 @@ export default {
 
         removeMonitor(groupIndex, index) {
             this.$root.publicGroupList[groupIndex].monitorList.splice(index, 1);
+        },
+
+        avgPing(index) {
+
+            let count = 0;
+
+            for (let i = 0; i < this.$root.heartbeatList.length; i++) {
+                count += this.$root.heartbeatList[index].at(i).ping;
+            }
+
+            return count / this.$root.heartbeatList.length;
+
         },
     }
 };
