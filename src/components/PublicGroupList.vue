@@ -33,18 +33,60 @@
                         <template #item="monitor">
                             <div class="item">
                                 <div class="row">
-                                    <div class="col-9 col-md-8 small-padding">
-                                        <div class="info">
-                                            <font-awesome-icon v-if="editMode" icon="arrows-alt-v" class="action drag me-3" />
-                                            <font-awesome-icon v-if="editMode" icon="times" class="action remove me-3" @click="removeMonitor(group.index, monitor.index)" />
+                                    <details>
+                                        <summary class="summary">
+                                            <div class="col-9 col-md-8 small-padding">
+                                                <div class="info">
+                                                    <font-awesome-icon v-if="editMode" icon="arrows-alt-v" class="action drag me-3" />
+                                                    <font-awesome-icon v-if="editMode" icon="times" class="action remove me-3" @click="removeMonitor(group.index, monitor.index)" />
 
-                                            <Uptime :monitor="monitor.element" type="24" :pill="true" />
-                                            {{ monitor.element.name }}
+                                                    <Uptime :monitor="monitor.element" type="24" :pill="true" />
+                                                    {{ monitor.element.name }}
+                                                </div>
+                                            </div>
+                                            <div :key="$root.userHeartbeatBar" class="col-3 col-md-4">
+                                                <HeartbeatBar size="small" :monitor-id="monitor.element.id" />
+                                            </div>
+                                        </summary>
+                                        <!-- Monitor Details -->
+                                        <!-- Ping Detail -->
+                                        <div class="shadow-box big-padding text-center stats row">
+                                            <a v-if="monitor.element.type == 'http'" :href="monitor.element.url">{{ monitor.element.url }}</a>
+                                            <div class="col">
+                                                <h4>Ping</h4>
+                                                <p>({{ $t("Current") }})</p>
+                                                <span class="num">
+                                                    <a href="#" @click.prevent="showPingChartBox = !showPingChartBox">
+                                                        <CountUp :value="$root.heartbeatList[monitor.element.id].at(-1).ping" />
+                                                    </a>
+                                                </span>
+                                            </div>
+                                            <!-- Uptime 24h Detail -->
+                                            <div class="col">
+                                                <h4>Uptime</h4>
+                                                <p>({{ $t("24 Hour") }})</p>
+                                                <span class="num">
+                                                    <Uptime :monitor="monitor.element" type="24" />
+                                                </span>
+                                            </div>
+                                            <!-- Uptime 30d Detail -->
+                                            <div class="col">
+                                                <h4>Uptime</h4>
+                                                <p>({{ $t("30 Day") }})</p>
+                                                <span class="num">
+                                                    <Uptime :value="monitor.element" type="720" />
+                                                </span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div :key="$root.userHeartbeatBar" class="col-3 col-md-4">
-                                        <HeartbeatBar size="small" :monitor-id="monitor.element.id" />
-                                    </div>
+                                        <!-- Ping Chart -->
+                                        <div v-if="showPingChartBox" class="shadow-box big-padding text-center ping-chart-wrapper">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <PingChart :monitor-id="monitor.element.id" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </details>
                                 </div>
                             </div>
                         </template>
@@ -56,15 +98,20 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from "vue";
 import Draggable from "vuedraggable";
 import HeartbeatBar from "./HeartbeatBar.vue";
+import CountUp from "./CountUp.vue";
 import Uptime from "./Uptime.vue";
+const PingChart = defineAsyncComponent(() => import("./PingChart.vue"));
 
 export default {
     components: {
         Draggable,
         HeartbeatBar,
         Uptime,
+        CountUp,
+        PingChart,
     },
     props: {
         editMode: {
@@ -74,7 +121,7 @@ export default {
     },
     data() {
         return {
-
+            showPingChartBox: true,
         };
     },
     computed: {
@@ -99,6 +146,14 @@ export default {
 
 <style lang="scss" scoped>
 @import "../assets/vars";
+
+.summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
 
 .no-monitor-msg {
     position: absolute;
